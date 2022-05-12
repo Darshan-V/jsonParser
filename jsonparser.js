@@ -106,9 +106,7 @@ const valueParser = function(input){
     result = objectParser(input) || arrayParser(input) || numberParser(input) || stringParser(input) || nullParser(input) || booleanParser(input)
     return result
 }
-function skipWhiteSpace(){
 
-}
 
 
 
