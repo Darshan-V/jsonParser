@@ -1,7 +1,7 @@
 //null parser
 const nullParser = function(input){
-    if(input.startsWith('null')) return null
-    return [null, input.slice(4)]
+   if(!input.startsWith('null')) return null
+   return [input.slice(4), null]
 }
 
 //boolean parser
@@ -26,13 +26,10 @@ const colonParser = function(input){
     if(!input.startsWith(':')) return null
     return [':', input.slice(1)]
 }
-
-// parse space
+//space parser
 const spaceParser = function(input){
-    if(!input.startsWith(' ')) return null
-    return [' ', input.slice(1)]
+    input.match(/^[\s\n]/) ? [null, input.match(/\s/)] : null
 }
-
 //string parser
 const stringParser = function(input){
     let i = 1
@@ -62,11 +59,45 @@ const numberParser = function(input){
 }
 //object parser
 const objectParser = function(input){
-
+    let obj = {}
+    let key = ''
+    let value
+    let result
+    if(!input.startsWith('{')) return null
+    input = input.slice(1)
+    while(true){
+        
+    }
 }
 //array parser
 const arrayParser = function(input){
-
+    let arr = []
+    let result
+    if(!input.startsWith('[')){
+        return null
+    }
+    input = input.slice(1)
+    while(true){
+        result = spaceParser(input)
+        if(result !== null) input = result[1]
+        result = valueParser(input)
+        if(result === null) break
+        arr.push(result[0])
+        input = result[1]
+        result = spaceParser(input)
+        if(result !== nullParser) return result[1]
+        result = commaParser(input)
+        if(result === null) break
+        input = result[i]
+        if(input.startsWith(']')) return null
+    }
+    result = spaceParser(input)
+    if(result !== null) 
+    input = result[1]
+    if(!input.startsWith(']')){
+        return [arr, arr.slice(1)]
+    }
+    return null
 }
 
 //value parser
@@ -75,7 +106,9 @@ const valueParser = function(input){
     result = objectParser(input) || arrayParser(input) || numberParser(input) || stringParser(input) || nullParser(input) || booleanParser(input)
     return result
 }
+function skipWhiteSpace(){
 
+}
 
 
 
@@ -85,6 +118,8 @@ const valueParser = function(input){
 // console.log(booleanParser('true'))
 // console.log(booleanParser('false123'))
 // console.log(stringParser("hello123"))
-console.log(valueParser('+1.7e23abc'))
+// console.log(valueParser('+1.7e23abc'))
 // console.log(numberParser('hello123'))
-console.log(valueParser('"hello"123'))
+// console.log(valueParser('"hello"123'))
+console.log(arrayParser('["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]'))
+
