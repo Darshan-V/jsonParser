@@ -27,13 +27,19 @@ const colonParser = function(input){
     return [':', input.slice(1)]
 }
 //space parser
-const spaceParser = function(input){
-    input.match(/^[\s\n]/) ? [null, input.match(/\s/)] : null
-}
+const spaceParser = function(input) {
+    var Index = input.search(/^(\s)+/)
+    while (Index === 0) {
+      input = input.slice(Index + 1, input.length)
+      Index = input.search(/^(\s|\n|\t)+/)
+    }
+    if (Index === -1) { return [input] }
+  }
 //string parser
 const stringParser = function(input){
-    let i = 1
     if(input.startsWith('"')){
+        let i = 1
+        
         let s = ''
         while(input[i] !== '"'){
             if(input[i] === '\\'){
@@ -51,33 +57,40 @@ const stringParser = function(input){
 }
 
 //number parser
-const numberParser = function(input){
-    const regex =String(input).match(/^[+-]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?/)
-    // if(!String(input).match(/^[+-]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?/)) return null
-    if(!regex) return null
-    return [parseFloat(regex[0], input.slice(regex[0].length))]
-}
-//object parser
-const objectParser = function(input){
-    let obj = {}
-    let key = ''
-    let value
-    let result
-    if(!input.startsWith('{')) return null
-    input = input.slice(1)
-    while(true){
-        
+// const numberParser = function(input){
+//     const regex = /^\s*(-?(0|[1-9][0-9]*)(\.[0-9]+)?(0|[eE][+-]?[0-9]+)?)\s*/
+//     // const regex = /^-?((0?0\.\d*)?([1-9]\d*(\.\d+)?))([eE][+-]?\d+)?/
+//     const matched = String(input).match(regex)
+//     if(!matched) return null
+//     return [ parseFloat(matched[0], input.slice(matched[0].length))]
+// }
+function numberParser (input) {
+    if (input[0] === '-' && /[^.e\d]/i.test(input[2]) && input[1] === '0') {
+      return [0, input.slice(2)]
     }
+    if (input[0] === '0' && /[^.e\d]/i.test(input[1])) {
+      return [0, input.slice(1)]
+    }
+    const result = input.match(
+      /(^-?[1-9]\d*(\.\d+)?(e-?\d+)?)|(^-?\d\.\d+(e-?\d+)?)|(^-?0e-?\d+)/gi
+    )
+    if (result == null) return null
+    const resLength = result[0].length
+    let fResult = Number(input.slice(0, resLength))
+    if (fResult === 0) {
+      fResult = 0
+    }
+    return [fResult, input.slice(resLength)]
 }
+
 //array parser
 const arrayParser = function(input){
     let arr = []
     let result
-    if(!input.startsWith('[')){
-        return null
-    }
+    if(!input.startsWith('[')) return null
+    
     input = input.slice(1)
-    while(true){
+    while(input){
         result = spaceParser(input)
         if(result !== null) input = result[1]
         result = valueParser(input)
@@ -103,7 +116,7 @@ const arrayParser = function(input){
 //value parser
 const valueParser = function(input){
     let result
-    result = objectParser(input) || arrayParser(input) || numberParser(input) || stringParser(input) || nullParser(input) || booleanParser(input)
+    result = /*objectParser(input) ||*/ arrayParser(input) || numberParser(input) || stringParser(input) || nullParser(input) || booleanParser(input)
     return result
 }
 
@@ -115,9 +128,12 @@ const valueParser = function(input){
 // console.log(nullParser('null123'))
 // console.log(booleanParser('true'))
 // console.log(booleanParser('false123'))
-// console.log(stringParser("hello123"))
+// console.log(stringParser('"hello123"'))
+// console.log(stringParser('"hello123\""'))
 // console.log(valueParser('+1.7e23abc'))
-// console.log(numberParser('hello123'))
+console.log(numberParser('0.12'))
 // console.log(valueParser('"hello"123'))
-console.log(arrayParser('["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]'))
+// console.log(arrayParser('["Ford", "BMW", "Fiat"]'))
+// console.log(spaceParser('123'))
 
+// console.log(JSON.parse('0e+'))
