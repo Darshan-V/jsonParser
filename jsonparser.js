@@ -31,21 +31,20 @@ const spaceParser = function(input) {
     var Index = input.search(/^(\s)+/)
     while (Index === 0) {
       input = input.slice(Index + 1, input.length)
-      Index = input.search(/^(\s|\n|\t|\b)+/)
+      Index = input.search(/^(\s|\n|\t|)+/)
     }
-    if (Index === -1) { return [input] }
+    if (Index === -1) { return input }
   }
-//string parser
+//string parser   
 const stringParser = function(input){
   let i = 0
   let spaceFound
   let data
-  data = (spaceFound = spaceParser(input)) ? spaceFound[0] : input
+  data = (spaceFound = spaceParser(input)) ? spaceFound[0] : spaceParser(input)
 
   if (data[0] === '"') {
-    data = data.substring(1, data.length)
-    i = data.search('"')
-    return ([data.substring(0, i), data.slice(i + 1, data.length)])
+    return spaceParser(input)
+    
   }
   return null
 }
@@ -65,8 +64,8 @@ const stringParser = function(input){
 const arrayParser = function(input){
    
     if (input[0] !== '[') return null
-    var arr = []
-    var result
+    const arr = []
+    let result
     let spaceFound
     input = input.slice(1)
     input = (spaceFound = spaceParser(input)) ? spaceFound[0] : input
@@ -97,20 +96,21 @@ const objectParser = function(input){
 
 }
 
+// console.log(spaceParser('"ab\nss\tvv\shh"'))
 
 
 
 
-
-// console.log(nullParser('null123'))
+// console.log(nullParser('nul'))
 // console.log(booleanParser('true'))
 // console.log(booleanParser('false123'))
-// console.log(stringParser('"hello123"'))
-// console.log(stringParser('"hello123\u1235"'))
+console.log(stringParser(('"Hello123\s\nghtg\tyyyy"')))
+// console.log(stringParser('"hello123\u8888"'))
 // console.log(valueParser('-1.7e23'))
 // console.log(numberParser('e+1'))
 // console.log(valueParser('"hello"123'))
-console.log(arrayParser('["Ford", "BMW", "Fiat"]'))
+// console.log(arrayParser('["Ford", "BMW", "Fiat"]'))
 // console.log(spaceParser('123'))
+// console.log(JSON.parse('["Ford", "BMW", "Fiat"]'))
+// console.log(arrayParser('["mismatch"}'))
 
-// console.log(JSON.parse('"hello124\u1235"'))
