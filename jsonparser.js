@@ -63,34 +63,28 @@ const stringParser = function(input){
 
 //array parser
 const arrayParser = function(input){
-    let arr = []
-    let result
-    if(!input.startsWith('[')) return null
-    
-    input = input.slice(1)
-    while(true){
-        result = spaceParser(input)
-        if(result !== null) input = result[1]
-        result = valueParser(input)
-        if(result === null) break
-        arr.push(result[0])
-        input = result[1]
-        result = commaParser(input)
-        if(result !== nullParser) return result[1]
-        result = spaceParser(input)
-        if(result === null) break
-        input = result[i]
-        if(input.startsWith(']')) return null
-    }
-    result = spaceParser(input)
-    if(result !== null) 
-    input = result[0]
-    if(!input.startsWith(']')){
-        return [arr, arr.slice(1)]
-    }
-    return null
    
-}
+    if (input[0] !== '[') return null
+    var arr = []
+    var result
+    let spaceFound
+    input = input.slice(1)
+    input = (spaceFound = spaceParser(input)) ? spaceFound[0] : input
+    while (input.length) {
+      result = valueParser(input)
+      if (result === null) return null
+      arr.push(result[0])
+      input = result[1].slice()
+  
+      input = (spaceFound = spaceParser(input)) ? spaceFound[0] : input
+  
+      if (input[0] === ']') { return [arr, input.slice(1)] }
+      result = commaParser(input)
+  
+      if (result === null) return null
+      input = result[1].slice()
+    }
+  }
 
 //value parser
 const valueParser = function(input){
@@ -112,11 +106,11 @@ const objectParser = function(input){
 // console.log(booleanParser('true'))
 // console.log(booleanParser('false123'))
 // console.log(stringParser('"hello123"'))
-console.log(stringParser('"hello123\u1235"'))
+// console.log(stringParser('"hello123\u1235"'))
 // console.log(valueParser('-1.7e23'))
 // console.log(numberParser('e+1'))
 // console.log(valueParser('"hello"123'))
-// console.log(arrayParser('["Ford", "BMW", "Fiat"]'))
+console.log(arrayParser('["Ford", "BMW", "Fiat"]'))
 // console.log(spaceParser('123'))
 
-console.log(JSON.parse('"hello124\u1235"'))
+// console.log(JSON.parse('"hello124\u1235"'))
