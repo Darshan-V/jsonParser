@@ -42,8 +42,6 @@ const stringParser = function(input){
   return [finResult.slice(0, finResult.length), input.slice(result + 1)]
 }
 
-
-
 //number parser
     const numberParser = function(input){
     const regex = /^\s*(-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?)\s*/
@@ -63,13 +61,9 @@ const arrayParser = function(input){
     let final = input
     while (final) {
       final = final.trim()
-      const temp =
-      nullParser(final) ||
-      booleanParser(final) ||
-      numberParser(final) ||
-      stringParser(final) ||
-      arrayParser(final)
-      if (temp === null) {
+      const temp = valueParser(final)
+      // nullParser(final) || booleanParser(final) || numberParser(final) || stringParser(final) || arrayParser(final) || objectParser(final)
+            if (temp === null) {
         return null
       }
       const first = temp[0]
@@ -85,6 +79,42 @@ const arrayParser = function(input){
   } else return null
 }
 
+//object parser
+const objectParser = function(input){
+  if(input.startsWith('{')){
+    let final = input.slice(1)
+    const obj = {}
+    while(final){
+      final = final.trim()
+      const one = 
+      stringParser(final)
+      if(one === null) return null
+      const first = temp[0]
+      let second = temp[1]
+      second = second.trim()
+      if(second[0] !== ':') return null
+      second = second.slice(1)
+      second = second.trim()
+      const two = valueParser(second)
+      // nullParser(second) || booleanParser(second) || numberParser(second) || stringParser(second) || arrayParser(second) || objectParser(second)
+      const sFirst = temp1[0]
+      let sSecond = temp1[1]
+      sSecond = sSecond.trim()
+      obj[first] = sFirst
+      if(!(sSecond === ',' || sSecond[0] === '}')) return null
+      if(sSecond === ','){
+        sSecond = sSecond.slice(1).trim()
+      }
+      if(sSecond[0] === '}'){
+        return [obj,sSecond.slice(1).trim()]
+
+      }
+      final = sSecond
+    }
+  }
+  return null
+}
+
 //value parser
 const valueParser = function(input){
     let result
@@ -92,9 +122,7 @@ const valueParser = function(input){
 
 }
 
-const objectParser = function(input){
-   
-  }
+
 
 
 
@@ -108,6 +136,6 @@ const objectParser = function(input){
 // console.log(valueParser('-1.7e23'))
 // console.log(numberParser('e+1'))
 // console.log(valueParser('"hello"123'))
-// console.log(arrayParser('["Ford", "BMW", "Fiat"]'))
+console.log(arrayParser('["Ford", "BMW", "Fiat"]'))
 // console.log(arrayParser('["mismatch"}'))
 // console.log(stringParser('"abc\\nghi\tjfjfj\u7777"jjjj'))
