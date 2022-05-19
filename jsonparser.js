@@ -147,7 +147,7 @@ const fs = require('fs')
   console.log(i, JSONParser(data.trim()))
 
 function JSONParser (input) {
-  const jsonValue = arrayParser(input) || objectParser(input)
+  const jsonValue = objectParser(input) || arrayParser(input)
   if (jsonValue === null || jsonValue[1] !== '') return null
   return jsonValue[0]
 }
