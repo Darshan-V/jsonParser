@@ -12,24 +12,19 @@ function booleanParser (input) {
 }
 // string parser
 function stringParser (input) {
-  if (input[0] !== '"') {
-    return null
-  }
-  const validEscapeChars = ['"', '\\', '/', 'b', 'f', 'n', 'r', 't', 'u']
-  const invalidChars = [
-    9, // tab
-    10 // line break
-  ]
+  if (input[0] !== '"') return null
+  const escChar = ['"', '\\', '/', 'b', 'f', 'n', 'r', 't', 'u']
+  const invalid = [9, 10]
   let i = 1
   while (input[i] !== '"') {
-    if (invalidChars.includes(input[i].charCodeAt(0))) return null
+    if (invalid.includes(input[i].charCodeAt(0))) return null
     if (input[i] === '\\') {
-      if (!validEscapeChars.includes(input[i + 1])) return null
-      if (input[i + 1] === 'u') i += 4
+      if (!escChar.includes(input[i + 1])) return null
+      if (input[i + 1] === 'u') {
+        i += 4
+      }
       i += 2
-    } else {
-      i++
-    }
+    } else { i++ }
   }
   return [input.slice(1, i), input.slice(i + 1)]
 }
@@ -108,7 +103,7 @@ function JSONParser (input) {
 }
 const fs = require('fs')
 // for (let i = 1; i <= 33; i++) {
-const i = 1
-  const data = fs.readFileSync(`./test/pass${i}.json`, 'utf8')
-  console.log(i, JSONParser(data.trim()))
+const i = 5
+const data = fs.readFileSync(`./test/pass${i}.json`, 'utf8')
+console.log(i, JSONParser(data.trim()))
 // }
